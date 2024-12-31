@@ -28,17 +28,3 @@ jobs:
 
     - name: Verify Pushed Image
       run: docker pull puneetnj/sheet:latest  # Pull the latest image for verification
-
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@master
-      with: 
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          sudo docker pull puneetnj/sheet:latest
-          sudo docker stop sheet || true
-          sudo docker rm sheet || true
-          sudo docker rmi puneetnj/sheet:latest || true
-          sudo docker image prune -f
-          sudo docker run --restart always -d --name sheet -p 3000:3000 puneetnj/sheet:latest
